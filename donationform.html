@@ -2,9 +2,46 @@
 <html>
     <header>
         <link rel="stylesheet" href="style.css">
-        <script src="index.js"></script>
+        <script>
+            //JS function that according to chat gpt will save data and locate to geolocation page when form is submitted (doesnt work yet)
+            function submitForm(event) {
+              event.preventDefault(); // Prevent the default form submission behavior
+          
+              // Get the form data
+              const form = document.getElementById("customerFormId");
+              const formData = new FormData(form);
+          
+              // Convert the form data to a JSON object
+              const jsonData = {};
+              formData.forEach((value, key) => {
+                jsonData[key] = value;
+              });
+          
+              // Replace 'https://script.google.com/macros/s/AKfycbwM_o9hNS2CFZQ_6mMYqMhpbTpUX3q9sYiK73YcN3_i6O45KLYcM6MjDgu6V4b8Sb1DGQ/exec' with your actual Google Script URL
+              const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwM_o9hNS2CFZQ_6mMYqMhpbTpUX3q9sYiK73YcN3_i6O45KLYcM6MjDgu6V4b8Sb1DGQ/exec';
+          
+              // Send the form data to the Google Apps Script URL using the fetch() API
+              fetch(googleScriptURL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
+              })
+              .then(response => response.text())
+              .then(result => {
+                console.log(result); // Output the response from the Google Script
+                window.location.href = 'geolocation.html'; // Redirect to the next page
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                // You can handle the error if needed
+              });
+            }
+          </script>
+          
         <title>
-            Sign Up | HELPfind
+            Sign Up | Hunger Heroes
         </title>
         
     </header>
@@ -18,7 +55,8 @@
             </tr>
             <tr>
                 <td>
-                    <form name="customerForm"  id="customerFormId" method="post" action="https://script.google.com/macros/s/AKfycbwM_o9hNS2CFZQ_6mMYqMhpbTpUX3q9sYiK73YcN3_i6O45KLYcM6MjDgu6V4b8Sb1DGQ/exec">
+                    <form name="customerForm"  id="customerFormId" method="post" action="https://script.google.com/macros/s/AKfycbwM_o9hNS2CFZQ_6mMYqMhpbTpUX3q9sYiK73YcN3_i6O45KLYcM6MjDgu6V4b8Sb1DGQ/exec" 
+                    onsubmit="submitForm()">
                         <label for="org">First Name:</label><br>
                         <input type="text" id="firstN" name="firstN" value="First Name"><br><br>
                         <label for="Last Name">Last Name:</label><br>
@@ -38,7 +76,7 @@
                         </div>
                         <label for="address">Address:</label><br>
                         <input type="text" id="address" name="address" value="Only for 'Pick up'"><br><br>
-                        <button type="submit" value="Submit" onclick="SaveUserInfo()">Submit</button>
+                        <button type="submit" value="Submit" >Submit</button>
                       </form>
                 </td>
             </tr>
