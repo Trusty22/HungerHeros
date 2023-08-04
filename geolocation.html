@@ -2,9 +2,11 @@
 <html>
     <body>
 
-        <p>Click the button to get your coordinates.</p>
+        <h1>Thank you so much for your gratuitous donation!</h1>
+        
+        <p>Find the nearest drop off locations near you!</p>
 
-        <button onclick="getLocation()">Try It</button>
+        <button onclick="getLocation()">Find Locations</button>
 
         <p id="demo"></p>
 
@@ -13,6 +15,8 @@
         <script>
             var x = document.getElementById("demo");
             let map;
+            var latitude;
+            var longitude;
 
             function getLocation() {
                 if (navigator.geolocation) {
@@ -26,26 +30,59 @@
                 x.innerHTML = "Latitude: " + position.coords.latitude + 
                 "<br>Longitude: " + position.coords.longitude;
 
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                
+                initMap();
 
-                // The location of Issaquah Food Bank
-                const issaquahFoodBankPosition = { lat: 47.52883095769209, lng: -122.03493103299726 };
+            }
+                //Function displays food banks near users current location on google maps
+            function initMap(){
+                x.innerHTML = "Latitude1: " + latitude + 
+                "<br>Longitude: " + longitude;
 
+
+                var center = {lat: latitude, lng: longitude};
+
+
+                var locations = [
+                    ['Renewal Food Bank<br>\
+                    15022 NE Bel Red Rd, Bellevue, WA 98007<br>\
+                     <a href="https://goo.gl/maps/eRzeDQ4sUFFZgpU79">Get Directions</a>', 47.62785564261917, -122.13924865582416],
+                ['Hopelink<br>\
+                14812 Main St, Bellevue, WA 98007<br>\
+            <a href="https://goo.gl/maps/TALb1ufn4kEBW2Av8">Get Directions</a>', 47.61176874140901, -122.14143177932723],
+                ['The Little Free Pantries<br>\
+                1605 151st Ave NE, Bellevue, WA 98007<br>\
+                <a href="https://goo.gl/maps/e8u7TwzYHewjdMww9">Get Directions</a>', 47.62622117632403, -122.13840834462823],
+                ['Feed Washington<br>\
+                8435 161st Avenue Northeast, Redmond, WA 98052<br>\
+                <a href="https://goo.gl/maps/6N5ytGksFmFe62Ei8">Get Directions</a>', 47.68005642981843, -122.1259615059909],
+                ];
                 // Initialize the map centered on the user's current location
                 map = new google.maps.Map(document.getElementById("map"), {
                     zoom: 15,
-                    center: { lat: latitude, lng: longitude },
+                    center: center,
                     mapId: "DEMO_MAP_ID",
                 });
 
-            // Add a marker for the Issaquah Food Bank
-                const marker = new google.maps.Marker({
-                    position: issaquahFoodBankPosition,
-                    map: map,
-                    title: "Issaquah Food and Clothing Bank",
-                });
+                var infowindow =  new google.maps.InfoWindow({});
+                var marker, count;
+                for (count = 0; count < locations.length; count++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(locations[count][1], locations[count][2]),
+                        map: map,
+                        title: locations[count][0]
+                    });
+                google.maps.event.addListener(marker, 'click', (function (marker, count) {
+                    return function () {
+                        infowindow.setContent(locations[count][0]);
+                        infowindow.open(map, marker);
+                    }
+                })(marker, count));
             }
+            }
+            
 
             function showError(error) {
                 switch(error.code) {
@@ -63,25 +100,14 @@
                     break;
                 }
             }
-            //lihj
-            var locations = [
-                    ['Renewal Food Bank<br>\
-                    15022 NE Bel Red Rd, Bellevue, WA 98007<br>\
-                     <a href="https://goo.gl/maps/eRzeDQ4sUFFZgpU79">Get Directions</a>', 47.62785564261917, -122.13924865582416],
-                ['Hopelink<br>\
-                14812 Main St, Bellevue, WA 98007<br>\
-            <a href="https://goo.gl/maps/TALb1ufn4kEBW2Av8">Get Directions</a>', 47.61176874140901, -122.14143177932723],
-                ['The Little Free Pantries<br>\
-                1605 151st Ave NE, Bellevue, WA 98007<br>\
-                <a href="https://goo.gl/maps/e8u7TwzYHewjdMww9">Get Directions</a>', 47.62622117632403, -122.13840834462823],
-                ['Feed Washington<br>\
-                8435 161st Avenue Northeast, Redmond, WA 98052<br>\
-                <a href="https://goo.gl/maps/6N5ytGksFmFe62Ei8">Get Directions</a>', 47.68005642981843, -122.1259615059909],
-  ];
+            
+            
+            
+            
         </script>
 
 <!-- Load the Google Maps JavaScript API with the "places" library -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSbkWeHjJ2vC2lF3U_cYXkkAedy5E6Zp4&libraries=places&callback=initMap" async defer></script>
-        
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSbkWeHjJ2vC2lF3U_cYXkkAedy5E6Zp4&libraries=places"></script>
+       
 </body>
 </html>
